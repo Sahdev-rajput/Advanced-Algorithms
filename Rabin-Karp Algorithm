@@ -1,0 +1,66 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+void search(char txt[],char pat[])
+{
+    int n=strlen(txt);
+    int m=strlen(pat);
+    int i=0,j=0;
+    int p=0;
+    int t=0;
+    
+    //Calculating the initial hash value of pattern
+    for(j=0;j<m;j++)
+    {
+        p+=((pat[j])*pow(10,m-j-1));
+    }
+    //Calculating the initial hash value of txt
+    for(i=0;i<m;i++)
+    {
+        t+=((txt[i])*pow(10,m-i-1));
+    }
+    for(;i<n;i++)
+    {
+        if(p==t)
+        {
+            int ini=i-m;
+            j=0;
+            for(;ini<i;ini++)
+            {
+               if(txt[ini]!=pat[j++])
+               {
+                   break;
+               }
+            }
+            if(j==m)
+            {
+                cout<<"Pattern found at index "<<i-m<<endl;
+            }
+        }
+            t=(t-(txt[i-m]*pow(10,m-1)))*10+(txt[i]);
+    }
+    if(p==t)
+        {
+            int ini=i-m;
+            j=0;
+            for(;ini<i;ini++)
+            {
+               if(txt[ini]!=pat[j++])
+               {
+                   break;
+               }
+            }
+            if(j==m)
+            {
+                cout<<"Pattern found at index "<<i<<endl;
+            }
+        }
+}
+int main()
+{
+    char txt[]="GEEKSFORGEEKSISONEOFTHEBESTGEEKSINTHEWORLDGEEKS";
+    char pat[]="GEEKS";
+    // char txt[]="aaaaab";
+    // char pat[]="aab";
+    search(txt,pat);
+}
