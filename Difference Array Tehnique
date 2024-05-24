@@ -1,0 +1,54 @@
+#include <bits/stdc++.h>
+using namespace std;
+// Difference Array Technique
+// This technique is used to perform the range based updates using a difference Array say D, where D[i]=A[i]-A[i-1]
+// When a update from (l,r,x) is performed only the D[l] and D[r+1] changes
+// While displaying the elements the A[i]=D[i]+A[i-1]
+
+vector<int> initialiseDifferenceArray(vector<int> &arr)
+{
+    int n=arr.size();
+    vector<int> D(n+1);
+    D[0]=arr[0],D[n]=0;
+    for(int i=1;i<n;i++)
+    {
+        D[i]=arr[i]-arr[i-1];
+    }
+    return D;
+}
+
+void update(int l,int r,int x, vector<int> &D)
+{
+    D[l]+=x;
+    D[r]-=x;
+}
+
+
+void PrintSolution(vector<int>&D,vector<int> &arr)
+{
+    int n=arr.size();
+    for(int i=0;i<n;i++)
+    {
+        if(i==0)
+        {
+            arr[i]=D[0];
+        }
+        else
+        {
+            arr[i]=D[i]+arr[i-1];
+        }
+        cout<<arr[i]<<" ";
+    }
+}
+
+int main()
+{
+    vector<int> arr={10,5,20,40};
+    vector<int> D=initialiseDifferenceArray(arr);
+    
+    update(0,1,10,D);
+    PrintSolution(D,arr);
+    cout<<endl;
+    update(2,3,10,D);
+    PrintSolution(D,arr);
+}
