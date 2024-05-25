@@ -1,0 +1,30 @@
+// Morris Inorder Traversal 
+
+vector<int> MorrisInorderTraversal(TreeNode *root)
+{
+    TreeNode* curr=root;
+    vector<int> ans;
+    while(curr!=NULL)
+    {
+        if(curr->left)
+        {
+            TreeNode* temp=curr->left;
+            while(temp->right!=NULL)
+            {
+                temp=temp->right;
+            }
+            temp->right=curr;
+            TreeNode *helper=curr;
+            curr=curr->left;
+            helper->left=NULL;
+        }
+        else
+        {
+            ans.push_back(curr->val);
+            curr=curr->right;
+        }
+    }
+    return ans;
+}
+// Tc: O(N)
+// SC:O(1)
