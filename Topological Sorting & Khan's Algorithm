@@ -1,0 +1,94 @@
+// TOPOLOGICAL SORTING USING DFS 
+
+#include<bits/stdc++.h>
+using namespace std;
+
+void dfs(int vertex,stack<int> &st,vector<vector<int>> &adjacency,vector<int> &visited)
+{
+    if(!visited[vertex])
+    {
+        visited[vertex]=1;
+        for(auto it:adjacency[vertex])
+        {
+            if(!visited[it])
+            {
+                dfs(it,st,adjacency,visited);
+            }
+        }
+        st.push(vertex);
+    }
+}
+
+vector<int> topoSortUsingDFS(vector<vector<int>> &adjacency)
+{
+    int num=adjacency.size();
+    vector<int> visited(num,0);
+    stack<int> st;
+    for(int i=0;i<num;i++)
+    {
+        if(!visited[i])
+        {
+            dfs(i,st,adjacency,visited);
+        }
+    }
+    vector<int> ans;
+    while(!st.empty())
+    {
+        ans.push_back(st.top());
+        st.pop();
+    }
+    return ans;
+}
+
+
+//KHANS ALGORITHM
+vector<int> topoSortUsingBFS(vector<vector<int>> &adjacency)
+{
+    int num=adjacency.size();
+    vector<int> indegree(num,0);
+    for(auto it:adjacency)
+    {
+        for(auto ele:it)
+        {
+            indegree[ele]++;
+        }
+    }
+    queue<int> q;
+    for(int i=0;i<num;i++)
+    {
+        if(indegree[i]==0) q.push(i);
+    }
+        vector<int> ans;
+    while(!q.empty())
+    {
+        auto ele=q.front();
+        q.pop();
+        ans.push_back(ele);
+        for(auto it:adjacency[ele])
+        {
+            indegree[it]--;
+            if(indegree[it]==0)
+            {
+                q.push(it);
+            }
+        }
+    }
+    return ans;
+}
+
+int main()
+{
+    vector<vector<int>> adjacency={{},{},{3},{1},{0,1},{0,2}};
+    vector<int> ans=topoSortUsingDFS(adjacency);
+    for(auto it:ans)
+    {
+        cout<<it<<" ";
+    }
+    cout<<endl;
+    ans=topoSortUsingBFS(adjacency);
+    for(auto it:ans)
+    {
+        cout<<it<<" ";
+    }
+    cout<<endl;
+}
