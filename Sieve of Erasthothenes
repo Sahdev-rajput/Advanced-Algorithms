@@ -1,0 +1,29 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+
+//Sieve of Erasthothenes : This algorithm is used to find out the number of prime numbers from 1 to N in best possible time.It does Erasthothenes
+//by Precomputation
+//Time Complexity: O(N)+O(Nlog(logn))+O(N)
+//Space Complexity: O(N)
+
+void SievePrime(int N)
+{
+    vector<int> Prime(N+1,1);
+    for(int i=2;i<=sqrt(N);i++)
+    {
+        for(int j=i*i;j<=N;j+=i)
+        {
+            Prime[j]=0;
+        }
+    }
+    for(int i=2;i<=N;i++)
+    {
+        if(Prime[i]==1) cout<<i<<" ";
+    }
+}
+
+int main()
+{
+    SievePrime(20);
+}
