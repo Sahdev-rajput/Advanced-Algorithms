@@ -1,0 +1,43 @@
+class SgtTree{
+   vector<int> seg;
+   public:
+   SgtTree(int n){
+     seg.resize(4*n+1,INT_MAX);
+   }
+       
+       void build(int ind,int low,int high,vector<int> &seg,vector<int> &a){
+    if(low==high){
+        seg[ind]=a[low];
+        return;
+    }
+    int mid=(low+high)>>1;
+    build(2*ind+1,low,mid,seg,a);
+    build(2*ind+2,mid+1,high,seg,a);
+    seg[ind]=min(seg[2*ind+1],seg[2*ind+2]);
+}
+
+int query(int ind,int low,int high,int l,int r,vector<int> &seg){
+    if(r<low || l>high){
+        return INT_MAX;
+    }
+    if(l<=low && r>=high){
+        return seg[ind];
+    }
+    int mid=(low+high)>>1;
+    int left=query(2*ind+1,low,mid,l,r,seg);
+    int right=query(2*ind+2,mid+1,high,l,r,seg);
+    return min(left,right);
+}
+
+ void update(int ind,int low,int high,int i,int val,vector<int> &seg){
+      if(low==high){
+        seg[ind]=val;
+        return;
+      }
+      int mid=(low+high)>>1;
+      if(i<=mid) update(2*ind+1,low,mid,i,val,seg);
+      else update(2*ind+2,mid+1,high,i,val,seg);
+      seg[ind]=min(seg[2*ind+1],seg[2*ind+2]);
+}
+
+};
