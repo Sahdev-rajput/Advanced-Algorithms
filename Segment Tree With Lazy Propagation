@@ -1,0 +1,96 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+class SGT
+{
+   public: 
+      vector<int> seg, lazy;
+      
+      SGT(int n){
+          seg.resize(4*n,0);
+          lazy.resize(4*n,0);
+      }
+      
+      void build(int ind,int low,int high,vector<int> &arr){
+          if(low==high){
+              seg[ind]=arr[low];
+              return;
+          }
+          
+          int mid=(low+high)/2;
+          build(2*ind+1,low,mid,arr);
+          build(2*ind+2,mid+1,high,arr);
+          
+          seg[ind]=seg[2*ind+1]+seg[2*ind+2];
+      }
+      
+      void update(int ind,int low,int high,int l,int r,int val){
+          if(lazy[ind]!=0){
+              seg[ind]+=(high-low+1)*lazy[ind];
+              if(low!=high){
+                  lazy[2*ind+1]+=lazy[ind];
+                  lazy[2*ind+2]+=lazy[ind];
+              }
+              lazy[ind]=0;
+          }
+          
+          // complete overlap
+          // no overlap
+          // partial overlap
+          
+          if(low>r || high<l){
+              return;
+          }
+          if(low>=l && high<=r){
+              seg[ind]+=(high-low+1)*val;
+              
+              if(low!=high){
+                  lazy[2*ind+1]+=val;
+                  lazy[2*ind+2]+=val; 
+              }
+              return;
+          }
+          
+              int mid=(low+high)/2;
+              update(2*ind+1,low,mid,l,r,val);
+              update(2*ind+2,mid+1,high,l,r,val);
+              seg[ind]=seg[2*ind+1]+seg[2*ind+2];
+      }
+      
+      int query(int ind, int low, int high, int l, int r){
+          
+          if(lazy[ind]!=0){
+               seg[ind]+=(high-low+1)*lazy[ind];
+               if(low!=high){
+                  lazy[2*ind+1]+=lazy[ind];
+                  lazy[2*ind+2]+=lazy[ind];
+              }
+              lazy[ind]=0;
+          }
+          
+          if(low>r || high<l){
+              return 0;
+          }
+          if(low>=l && high<=r){
+             return seg[ind];
+          }
+          
+              int mid=(low+high)/2;
+              int left=query(2*ind+1,low,mid,l,r);
+              int right=query(2*ind+2,mid+1,high,l,r);
+              return left+right;
+      }
+};
+
+int main(){
+    vector<int> arr={1,2,8,6,3};
+    // 1,4,10,18,15
+    SGT sgt=SGT(arr.size());
+    sgt.build(0,0,arr.size()-1,arr);
+    cout<<sgt.seg[0]<<endl;
+    sgt.update(0,0,arr.size(),3,4,10);
+    cout<<sgt.seg[0]<<endl;
+    sgt.update(0,0,arr.size(),1,4,2);
+    cout<<sgt.query(0,0,arr.size(),1,4)<<endl;
+    cout<<sgt.seg[0]<<endl;
+}
