@@ -55,10 +55,10 @@ class ST{
    
    int query(int ind,int low,int high,int l,int r){
        if(lazy[ind]!=0){
-           seg[ind]+=(high-low+1)*lazy[ind];
+           seg[ind]+=(high-low+1)-seg[ind];
            if(low!=high){
-               lazy[2*ind+1]+=lazy[ind];
-               lazy[2*ind+2]+=lazy[ind];
+               lazy[2*ind+1]=1;
+               lazy[2*ind+2]=1;
            }
            lazy[ind]=0;
        }
