@@ -1,0 +1,60 @@
+#include <bits/stdc++.h>
+using namespace std;
+ 
+class FenwickTree
+{
+   public:
+   int n;
+   vector<int> fenwickTree;
+   
+   FenwickTree(int n){
+       this->n = n;
+       fenwickTree.resize(n+1);
+   }
+   
+   void update(int i,int add){
+       while(i<=n){
+           fenwickTree[i]+=add;
+           i+=(i&(-i));
+       }
+   }
+   
+   int query(int i){
+       int sum=0;
+       while(i!=0){
+           sum+=fenwickTree[i];
+           i=i&(i-1);
+       }
+       return sum;
+   }
+   
+   int find(int k){
+       int curr=0,prevSum=0;
+       for(int i=log2(n);i>=0;i--){
+           if(fenwickTree[curr+(1<<i)]+prevSum<k){
+               curr=curr+(1<<i);
+               prevSum+=fenwickTree[curr];
+           }
+       }
+       return curr+1;
+   }
+};
+
+int main(){
+    vector<int> coins = {3, 4, 5, 6, 1, 2}; // 0-based
+
+    FenwickTree ft = FenwickTree(coins.size()); // ✅ Use full size
+
+    for(int i = 0; i < coins.size(); i++){
+        ft.update(i + 1, coins[i]); // ✅ Use 1-based index
+    }
+
+    // To get sum of coins[2] to coins[4] => query(5) - query(2)
+    cout << ft.query(5) - ft.query(2) << endl;
+
+    ft.update(3, 10); // ✅ coins[2] += 10, so update(3)
+
+    cout << ft.query(5) - ft.query(2) << endl;
+    
+    cout<<"Lower Bound for  12 is "<<ft.find(12)<<endl;
+}
